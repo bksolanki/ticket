@@ -1,0 +1,168 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.bhargav.sales2</groupId>
+  <artifactId>quickstart</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>quickstart</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+   
+    <dependency>
+    	<groupId>com.google.code.gson</groupId>
+    	<artifactId>gson</artifactId>
+    	<version>2.3.1</version>
+    </dependency>
+  
+  <dependency>
+  <groupId>org.jooq</groupId>
+  <artifactId>jooq</artifactId>
+  <version>3.11.5</version>
+</dependency>
+<dependency>
+  <groupId>org.jooq</groupId>
+  <artifactId>jooq-meta</artifactId>
+  <version>3.11.5</version>
+</dependency>
+<dependency>
+  <groupId>org.jooq</groupId>
+  <artifactId>jooq-codegen</artifactId>
+  <version>3.11.5</version>
+</dependency>
+  	<dependency>
+  		<groupId>mysql</groupId>
+  		<artifactId>mysql-connector-java</artifactId>
+  		<version>8.0.11</version>
+  	</dependency>
+  </dependencies>
+ <build>
+ <pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-myquery-plugin</artifactId>
+        <version>1.0</version>
+        <configuration>
+          <url>http://www.foobar.com/query</url>
+          <timeout>10</timeout>
+          <options>
+            <option>one</option>
+            <option>two</option>
+            <option>three</option>
+          </options>
+        </configuration>
+      </plugin>
+    
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>properties-maven-plugin</artifactId>
+    <version>1.0.0</version>
+ 
+</plugin>
+
+<plugin>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<version>3.8.0</version>
+
+				<!-- The plugin should hook into the generate goal -->
+				<executions>
+					<execution>
+					<phase>initialize</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+					<jdbc>
+						<driver>${jdbc.driver}</driver>
+						<url>${jdbc.url}</url>
+						<user>${jdbc.user}</user>
+						<password>${jdbc.password}</password>
+					</jdbc>
+
+					<generator>
+						<database>
+							<name>org.jooq.util.mysql.MySQLDatabase</name>
+							<includes>.*</includes>
+							<excludes></excludes>
+							<inputSchema>sales</inputSchema>
+						</database>
+						<target>
+							<packageName>com.bhargav.sales.quickstart</packageName>
+							<directory>src/main/java</directory>
+						</target>
+					</generator>
+				</configuration>
+					</execution>
+				</executions>
+
+				<dependencies/>
+
+				
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<systemProperties>
+						<systemProperty>
+							<key>jdbc.driver</key>
+							<value>${jdbc.driver}</value>
+						</systemProperty>
+						<systemProperty>
+							<key>jdbc.user</key>
+							<value>${jdbc.user}</value>
+						</systemProperty>
+						<systemProperty>
+							<key>jdbc.password</key>
+							<value>${jdbc.password}</value>
+						</systemProperty>
+						<systemProperty>
+							<key>jdbc.url</key>
+							<value>${jdbc.url}</value>
+						</systemProperty>
+					</systemProperties>
+				</configuration>
+			</plugin>
+ </plugins>
+ </pluginManagement>
+ </build>
+ 	<profiles>
+		<profile>
+			<id>default</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<jdbc.user>root</jdbc.user>
+				<jdbc.password>abcd1234</jdbc.password>
+				<jdbc.url>jdbc:mysql://localhost:3306/sales?serverTimezone=UTC</jdbc.url>
+				<jdbc.driver>com.mysql.cj.jdbc.Driver</jdbc.driver>
+			</properties>
+		</profile>
+	</profiles>
+
+  
+</project>
