@@ -52,6 +52,8 @@ public class App {
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sales?serverTimezone=UTC",
 					"root", "abcd1234");
+			
+			//Qeury to get available seats. Ideally, should be in "getAvailableSeats" function
 			Result<ItemRecord> result = DSL.using(connection).selectFrom(Item.ITEM)
 					.where(Item.ITEM.ITEM_STATUS.eq("available").and(Item.ITEM.SHARE.eq((byte) 1))).fetch();
 			ArrayList<HashMap<String, String>> dataMap = new ArrayList<HashMap<String, String>>();
@@ -76,6 +78,7 @@ public class App {
 				System.out.println("Items available");
 				System.out.println(gson.toJson(dataMap));
 			}
+			// This part should reside in the function "putHold"
 			sc = new Scanner(System.in);
 			System.out.println("Enter Number of items to reserve");
 			int quantity = 0;
@@ -113,7 +116,10 @@ public class App {
 			for (int i = 0; i < updates_data.length; i++) {
 				System.out.println(updates_data[i]);
 			}
-			System.out.println("Your hold was successful: \nOrderid:" + orderid);
+			System.out.println("Your hold was successful: \nOrderid:" + orderid); 
+			
+			//Hold process ends here
+			//Purchase/Invoice process begins here. Must ideally reside in function "doPurchase"
 			System.out.println("Purchase your your holds in  less than 60 .Enter Orderid");
 			String inputOrderId = sc.next();
 			System.out.println("Enter the email address for held order");

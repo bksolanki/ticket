@@ -20,6 +20,7 @@ public class Release implements Job {
 
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		try {
+			// Functionality to release holds
 			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sales?serverTimezone=UTC",
 					"root", "abcd1234");
 			DSLContext release_context = DSL.using(connection);
