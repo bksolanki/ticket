@@ -12,7 +12,7 @@ The external libraries used are
 ## Steps to run
 
 1) A mysql database server is needed to run the application. currently the address is jdbc:mysql://localhost:3306/sales?serverTimezone=UTC
-
+NOTE: Server time and system time should be in the same timezone for release to happen in the expected time range. else, the release will behave differently.
 2) In that server, please run the script "tables_queries.sql"
 
 3) Please change the database url in pom.xml, App.java and Release.java
