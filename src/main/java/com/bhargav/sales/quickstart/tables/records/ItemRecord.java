@@ -826,4 +826,112 @@ public class ItemRecord extends UpdatableRecordImpl<ItemRecord> implements Recor
         set(16, invoiceId);
         set(17, eventId);
     }
+
+	@Override
+	public Integer component1() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer component2() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Byte component3() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component4() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component5() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component6() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component7() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component8() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component9() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component10() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component11() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component12() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer component13() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Double component14() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component15() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Byte component16() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer component17() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer component18() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

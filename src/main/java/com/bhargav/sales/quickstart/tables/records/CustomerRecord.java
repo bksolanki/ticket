@@ -334,4 +334,40 @@ public class CustomerRecord extends UpdatableRecordImpl<CustomerRecord> implemen
         set(4, city);
         set(5, email);
     }
+
+	@Override
+	public Integer component1() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component2() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component3() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component4() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component5() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component6() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

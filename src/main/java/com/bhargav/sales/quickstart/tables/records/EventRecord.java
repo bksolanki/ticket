@@ -377,4 +377,46 @@ public class EventRecord extends UpdatableRecordImpl<EventRecord> implements Rec
         set(5, state);
         set(6, eventName);
     }
+
+	@Override
+	public Integer component1() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component2() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component3() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Timestamp component4() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component5() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component6() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String component7() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

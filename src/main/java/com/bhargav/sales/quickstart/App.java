@@ -8,14 +8,18 @@ import com.google.gson.Gson;
 import com.bhargav.sales.quickstart.tables.Customer;
 import com.bhargav.sales.quickstart.tables.Item;
 import com.bhargav.sales.quickstart.tables.records.*;
-
+import org.quartz.CronExpression;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.jooq.Batch;
-import org.jooq.Condition;
-import org.jooq.SQLDialect;
-import org.jooq.TableLike;
 import org.jooq.impl.DSL;
 import java.util.UUID;
 import java.sql.Connection;
@@ -24,15 +28,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import com.bhargav.sales.quickstart.Release;
 public class App {
 
 	public static void main(String[] args) {
 		Gson gson = new Gson();
+		JobDetail release_job = JobBuilder.newJob(Release.class)
+				.withIdentity("Release", "Release").build();
+		Trigger trigger1 = TriggerBuilder.newTrigger()
+				.withIdentity("cronTrigger1", "group1")
+				.withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ?"))
+				.build();
+		
+		Scheduler scheduler1;
+		try {
+			scheduler1 = new StdSchedulerFactory().getScheduler();
+			scheduler1.start();
+			scheduler1.scheduleJob(release_job, trigger1);
+		} catch (SchedulerException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		System.out.println("Hello Worldlalal!");
-		String user = System.getProperty("jdbc.user");
-		String password = System.getProperty("jdbc.password");
-		String url = System.getProperty("jdbc.url");
-		String driver = System.getProperty("jdbc.driver");
+
 		try {
 			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sales?serverTimezone=UTC",
 					"root", "abcd1234");
@@ -59,9 +78,11 @@ public class App {
 				System.out.println("Event is sold out!");
 			}
 			else
-			System.out.println(gson.toJson(dataMap));
+			{
+				System.out.println("Items available");
+			System.out.println(gson.toJson(dataMap));}
 			Scanner sc = new Scanner(System.in);
-			System.out.println("Enter item Id to reserve");
+			System.out.println("Enter Number of items to reserve");
 			int quantity = 0;
 			quantity = sc.nextInt();
 			System.out.println("Enter itemids you want to reserve");
@@ -71,6 +92,7 @@ public class App {
 				
 			}
 			String orderid = UUID.randomUUID().toString();
+			
 			System.out.println("Enter the email address of the customer");
 			String email = sc.next();
 			ArrayList<ItemRecord> updates = new ArrayList<ItemRecord>();
@@ -81,14 +103,49 @@ public class App {
 				int custid =  DSL.using(connection).selectFrom(Customer.CUSTOMER).where(Customer.CUSTOMER.EMAIL.eq(email)).fetch().get(0).getCustId();
 				record.setInternalnotes("" + custid);
 				record.setItemStatus("ON_HOLD");
-				updates.add(record);			}
+				Integer hold_length = (int) ((System.currentTimeMillis() + 60000)/1000);
+			    String sql = String.format("insert into items_reserve(orderid, item_id, hold_expire, hold_cust_id) values(\'%s\', %d, %d, %d)",orderid, items[i],hold_length,custid);
+			    DSL.using(connection).execute(sql);
+			    updates.add(record);
+				
+				}
 			
 			DSLContext dsl_context = DSL.using(connection);
 			 int[] updates_data = dsl_context.batchUpdate(updates).execute();
 			 for(int i =0; i< updates_data.length;i++) {
 				 System.out.println(updates_data[i]);
 			 }
-			
+			System.out.println("Your hold was successful: \nOrderid:" + orderid);
+			System.out.println("Purchase your your holds in 20 less than seconds.Enter Orderid");
+			String inputOrderId = sc.next();
+			System.out.println("Enter the email address for held order");
+			String inputEmail = sc.next();
+			String invoiceuuid = UUID.randomUUID().toString();
+			int invoiceId = invoiceuuid.hashCode();
+			int invoice_custid =  DSL.using(connection).selectFrom(Customer.CUSTOMER).where(Customer.CUSTOMER.EMAIL.eq(inputEmail)).fetch().get(0).getCustId();
+			String get_items_sql = String.format("select item_id from items_reserve where orderid = \'%s\' and hold_cust_id = %d",inputOrderId,invoice_custid );
+			Result<Record> itemsToInvoice = dsl_context.fetch(get_items_sql);
+			ArrayList<ItemRecord> invoiceList = new ArrayList<>();
+		    for(Record r: itemsToInvoice) {
+		    	Integer itemId = (Integer) r.getValue(0);
+		    	ItemRecord record = new ItemRecord();
+		    	record.setItemId(itemId);
+		    	record.setItemStatus("sold");
+		    	record.setPurchaseCustId(invoice_custid);
+		    	record.setInvoiceId(invoiceId);
+		    	record.setHoldComment(null);
+
+		    	invoiceList.add(record);
+		    }
+		    dsl_context.batchUpdate(invoiceList).execute();
+		    if(invoiceList.isEmpty()) {
+		    	System.out.println("Invoice failure. No items reserved for that orderid and custid combination");
+		    }
+		    else
+		    {
+		    	System.out.println("Invoice successful for orderid: " + inputOrderId + " Invoiceid :" + invoiceId);
+		    	
+		    }
 			
 			
 		} catch (SQLException e) {
